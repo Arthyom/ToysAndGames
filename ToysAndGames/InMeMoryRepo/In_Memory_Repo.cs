@@ -5,6 +5,7 @@ using System.Linq;
 
 using System.Threading.Tasks;
 using ToysAndGames.AppContext;
+using ToysAndGames.Models;
 
 namespace ToysAndGames.InMeMoryRepo
 {
@@ -75,6 +76,12 @@ namespace ToysAndGames.InMeMoryRepo
             return await app_Db_Context.FindAsync<T>(id);
         }
 
-        
+        public Task<List< Product >> Serach_match(string param)
+        {
+           return  app_Db_Context.Products.Where(
+                p => p.Name.ToLower().Contains(param) || p.Id.ToString().ToLower().Contains(param) || p.Price.ToString().ToLower().Contains(param) ||
+                     p.Description.ToLower().Contains(param) || p.Company.ToLower().Contains(param) || p.AgeRestriction.ToString().ToLower().Contains(param)
+            ).ToListAsync();
+        }
     }
 }

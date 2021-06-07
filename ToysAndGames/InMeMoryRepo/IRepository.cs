@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ToysAndGames.Models;
 
 namespace ToysAndGames.InMeMoryRepo
 {
@@ -11,7 +12,7 @@ namespace ToysAndGames.InMeMoryRepo
         List<TEntity> Query{get;}
 
 
-
+        
         Task<bool> Add( TEntity entity );
 
         Task<bool> Delete(TEntity entity);
@@ -22,7 +23,7 @@ namespace ToysAndGames.InMeMoryRepo
 
         Task<TEntity> Get_ById( int id );
 
-
+        Task<List<Product>> Serach_match(string param);
 
         Task<int> Save();
     }

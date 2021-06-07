@@ -144,7 +144,7 @@ namespace ToysAndGames.AppContext
                         AgeRestriction = 9,
                         Company = "Wfls INC",
                         Description = "no one",
-                        Name = "Monas Chinas Estander",
+                        Name = "Monas Chinas Estandar",
                         Price = 43,
                         ruta_imagen = "d0b5d537-9661-48bb-9611-66477a55d065.jpg",
 

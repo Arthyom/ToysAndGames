@@ -35,9 +35,9 @@ namespace ToysAndGames.Controllers
         }
 
         [HttpGet]
-        public  ActionResult<List<DTOProduct>> get()
+        public ActionResult<List<DTOProduct>> get()
         {
-            var products =  in_Memory_Repo.Query;
+            var products = in_Memory_Repo.Query;
             var DTOProducts = this.maper.Map<List<DTOProduct>>(products);
             return DTOProducts;
         }
@@ -50,21 +50,21 @@ namespace ToysAndGames.Controllers
             if (DtoNewProd.imagen != null)
                 new_product.ruta_imagen = await imageLoader.guardar("productos", DtoNewProd.imagen);
 
-            bool ok =  await in_Memory_Repo.Add(new_product);
+            bool ok = await in_Memory_Repo.Add(new_product);
 
-            if ( ok )
+            if (ok)
                 return Ok(new { ok = true });
 
             return BadRequest();
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult> patch([FromRoute] int id, [FromForm] DTOCProduct edited_prod )
+        public async Task<ActionResult> patch([FromRoute] int id, [FromForm] DTOCProduct edited_prod)
         {
             var found = await in_Memory_Repo.Get_ById(id);
             if (found != null)
             {
-                var edited = maper.Map<DTOCProduct ,Product>(edited_prod);
+                var edited = maper.Map<DTOCProduct, Product>(edited_prod);
 
                 found.AgeRestriction = edited.AgeRestriction;
                 found.Company = edited.Company;
@@ -90,10 +90,12 @@ namespace ToysAndGames.Controllers
             if (found != null)
             {
                 await in_Memory_Repo.Delete(found);
+                // await Task.Delay(7000);
                 return Ok(new { Ok = true });
             }
             return BadRequest();
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<DTOProduct>> get_by([FromRoute] int id)
@@ -106,6 +108,22 @@ namespace ToysAndGames.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpGet("search/{data}")]
+        public async Task<ActionResult<List<DTOProduct>>> get_search([FromRoute] string data)
+        {
+            List<DTOProduct> lista_salida;
+            List<Product> list;
+            if (data != "*")
+                list = await in_Memory_Repo.Serach_match(data);
+
+            else
+                list = in_Memory_Repo.Query;
+
+            lista_salida = maper.Map<List<DTOProduct>>(list);
+           
+            return lista_salida;
         }
     }
 }
