@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using ToysAndGames.AppContext;
 using ToysAndGames.Models;
+using System.IO;
 
 namespace ToysAndGames
 {
@@ -35,7 +36,10 @@ namespace ToysAndGames
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseKestrel()
+                    .UseContentRoot(Directory.GetCurrentDirectory())
+                    .UseUrls("http://*:5000")
+                    .UseStartup<Startup>();
                 });
     }
 }

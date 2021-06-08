@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ToysAndGames.AppContext;
 using ToysAndGames.InMeMoryRepo;
@@ -36,6 +38,13 @@ namespace ToysAndGames
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
                 c.AddPolicy("AllowMethods", options => options.AllowAnyMethod());
             });
+            services.Configure<ForwardedHeadersOptions>(
+                opt =>
+                {
+                    opt.KnownProxies.Add(IPAddress.Parse("45.93.100.203"));
+                }
+            );
+
             services.AddHttpContextAccessor();
             services.AddScoped( typeof( In_Memory_Repo<Product>) );
             services.AddAutoMapper(typeof(Startup));
@@ -64,6 +73,13 @@ namespace ToysAndGames
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseForwardedHeaders(
+                new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                }    
+            );
 
             app.UseAuthorization();
 
